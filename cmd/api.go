@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	"github.com/asmit990/golangAPI/internal/product"
+	"github.com/asmit990/golangAPI/internal/products"
 )
 
 type application struct {
@@ -31,10 +31,10 @@ func (app *application) mount() http.Handler {
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("all good"))
 	})
+	productServices := products.NewService()
+	productHandler := products.NewHandler(productServices)
 
-	productHandler := products.NewHandler(nil)
-
-	r.Get("/products", productHandler.ListProduct)
+	r.Get("/products", productHandler.ListProducts)
 
 	http.ListenAndServe(";3000", r)
 	return r
